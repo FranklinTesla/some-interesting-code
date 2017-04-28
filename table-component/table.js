@@ -3,9 +3,13 @@ NEJ.define([
 ], function(template) {
     // 检测prop的必传属性
     function _checkProp(prop) {
+        var isChoiceValid = prop.choice
+                            && prop.choice instanceof Array
+                            && prop.choice.length > 0;
+
         if (!('label' in prop)
-            || (!('template' in prop))
-            && !('name' in prop)) {
+            || (!('template' in prop)) && !('name' in prop)
+            || !isChoiceValid && prop.choice) {
             return false;
         }
 
@@ -28,7 +32,7 @@ NEJ.define([
                 }
 
                 if (!_checkProp(prop)) {
-                    throw new Error("If the prop is an object, the property:'name' or 'template' and 'label' must be passed in!");
+                    throw new Error("If the prop is an object, the property:'name' or 'template' and 'label' must be passed in!\nIf you pass prop.choice, the prop.choice must be an array and its length cannot be 0!");
                 }
                 if (prop.template) {
                     this.parseCustomTemplate(prop);
@@ -63,6 +67,11 @@ NEJ.define([
                 }
             }
             prop.template = result;
+        },
+        changeSource: function($event) {
+            if ($event.selected) {
+                this.$emit('refresh', $event.selected);
+            }
         },
         name: 'yd-table',
         template: template
