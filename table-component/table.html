@@ -1,0 +1,20 @@
+<table class="m-table {className}">
+    <thead>
+        <tr>
+            {#list props as prop}
+            <th r-style={{width: prop.width}}>{prop.label}</th>
+            {/list}
+        </tr>
+    </thead>
+    <tbody>
+        {#list data as tableItem}
+        <tr>
+            {#list props as prop}
+            <td>
+                {#include prop.template || tableItem[prop.name]}
+            </td>
+            {/list}
+        </tr>
+        {/list}
+    </tbody>
+</table>
