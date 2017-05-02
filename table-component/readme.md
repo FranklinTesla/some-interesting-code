@@ -93,6 +93,13 @@ js:
     
             若传该属性，则props[i].label不会在表头中显示。
 
+        6. props[i].sortable
+
+            [可选]
+
+            类型：Boolean
+
+            是否可点击该列表头排序，第一次点击按该列升序对data进行排序。
 
 2. 事件：
 

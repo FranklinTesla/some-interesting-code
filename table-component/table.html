@@ -2,11 +2,16 @@
     <thead>
         <tr>
             {#list props as prop}
-            <th r-style={{width: prop.width}}>{#if prop.choice}<select2
-                    placeholder=""
-                    class="m-select3-m m-select3"
-                    source={prop.choice}
-                    on-select={this.changeSource($event)}/>{#else}{prop.label}{/if}</th>
+            <th r-style={{width: prop.width}}>
+                {#if prop.choice}
+                    <select2
+                        placeholder=""
+                        class="m-select3-m m-select3"
+                        source={prop.choice}
+                        on-select={this.changeSource($event)}/>
+                {#elseif prop.sortable}
+                    <span class="table_sort" r-class={{'ascend': isAscend, 'descend': !isAscend}} on-click={this.toggleSort(prop.name)}>{prop.label}</span>
+                {#else}{prop.label}{/if}</th>
             {/list}
         </tr>
     </thead>

@@ -16,6 +16,7 @@ NEJ.define([
         return true;
     }
 
+    var isReverse;
     var Table = Regular.extend({
         config: function(data) {
             var prop;
@@ -38,6 +39,9 @@ NEJ.define([
                     this.parseCustomTemplate(prop);
                 }
             }
+        },
+        data: {
+            isAscend: true
         },
         parseCustomTemplate: function(prop) {
             if (typeof prop.template !== 'string') {
@@ -72,6 +76,44 @@ NEJ.define([
             if ($event.selected) {
                 this.$emit('refresh', $event.selected);
             }
+        },
+        toggleSort: function(key) {
+            if (!isReverse) {
+                this.ascending(key);
+            } else {
+                this.descending(key);
+            }
+            isReverse = !isReverse;
+        },
+        ascending: function(key) {
+            var tableData = this.data.data;
+            this.data.isAscend = true;
+            tableData.sort(function(a, b) {
+                if (a[key] < b[key]) {
+                    return -1;
+                }
+
+                if (a[key] > b[key]) {
+                    return 1;
+                }
+
+                return 0;
+            });
+        },
+        descending: function(key) {
+            var tableData = this.data.data;
+            this.data.isAscend = false;
+            tableData.sort(function(a, b) {
+                if (a[key] < b[key]) {
+                    return 1;
+                }
+
+                if (a[key] > b[key]) {
+                    return -1;
+                }
+
+                return 0;
+            });
         },
         name: 'yd-table',
         template: template
