@@ -3,9 +3,10 @@
         <tr>
             {#list props as prop}
             <th r-style={{width: prop.width}}>{#if prop.choice}<select2
+                    placeholder=""
                     class="m-select3-m m-select3"
                     source={prop.choice}
-                    on-change={this.changeSource($event)}/>{#else}{prop.label}{/if}</th>
+                    on-select={this.changeSource($event)}/>{#else}{prop.label}{/if}</th>
             {/list}
         </tr>
     </thead>
