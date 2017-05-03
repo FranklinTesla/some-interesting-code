@@ -7,7 +7,7 @@ NEJ.define([
                             && prop.choice instanceof Array
                             && prop.choice.length > 0;
 
-        if (!('label' in prop)
+        if (!('label' in prop) && !('headTemplate' in prop)
             || (!('template' in prop)) && !('name' in prop)
             || !isChoiceValid && prop.choice) {
             return false;
@@ -33,10 +33,13 @@ NEJ.define([
                 }
 
                 if (!_checkProp(prop)) {
-                    throw new Error("If the prop is an object, the property:'name' or 'template' and 'label' must be passed in!\nIf you pass prop.choice, the prop.choice must be an array and its length cannot be 0!");
+                    throw new Error("If the prop is an object, there must be one of these properties:'name' or 'template',and one of these properties: 'label' or 'headTemplate'!\nIf you pass prop.choice, the prop.choice must be an array and its length cannot be 0!");
                 }
                 if (prop.template) {
                     this.parseCustomTemplate(prop);
+                }
+                if (prop.headTemplate) {
+                    this.parseHeadTemplate(prop);
                 }
             }
         },
@@ -47,7 +50,16 @@ NEJ.define([
             if (typeof prop.template !== 'string') {
                 throw new Error('The type of prop.template must be String!');
             }
-            var result = prop.template
+            prop.template = this._parseTemplate(prop.template);
+        },
+        parseHeadTemplate: function(prop) {
+            if (typeof prop.headTemplate !== 'string') {
+                throw new Error('The type of prop.headTemplate must be String!');
+            }
+            prop.headTemplate = this._parseTemplate(prop.headTemplate);
+        },
+        _parseTemplate: function(template) {
+            var result = template
                 , handleName = ''
                 , eventReg = /\s+on-\w+={\s*this\.\w+\((?:[A-Za-z0-9_$](?:,\s)*)*\)\s*}/g
                 , eventHandleReg = /{\s*this\.(\w+)\((?:[A-Za-z0-9_$](?:,\s)*)*\)\s*}/
@@ -70,11 +82,14 @@ NEJ.define([
                     })(handleName)
                 }
             }
-            prop.template = result;
+            return result;
         },
-        changeSource: function($event) {
+        changeSource: function($event, key) {
             if ($event.selected) {
-                this.$emit('refresh', $event.selected);
+                this.$emit('refresh', {
+                    key: key,
+                    value: $event.selected
+                });
             }
         },
         toggleSort: function(key) {
@@ -85,37 +100,49 @@ NEJ.define([
             }
             isReverse = !isReverse;
         },
+        _handleServerSort: function(key) {
+            this.$emit('refresh', {
+                key: key,
+                value: {isAscend: this.data.isAscend}
+            });
+        },
         ascending: function(key) {
-            var tableData = this.data.data;
             this.data.isAscend = true;
+            // 服务端排序
+            if (this.data.serverSort) {
+                this._handleServerSort(key);
+                return;
+            }
+            var tableData = this.data.data;
             tableData.sort(function(a, b) {
                 if (a[key] < b[key]) {
                     return -1;
                 }
-
                 if (a[key] > b[key]) {
                     return 1;
                 }
-
                 return 0;
             });
         },
         descending: function(key) {
-            var tableData = this.data.data;
             this.data.isAscend = false;
+            // 服务端排序
+            if (this.data.serverSort) {
+                this._handleServerSort(key);
+                return;
+            }
+            var tableData = this.data.data;
             tableData.sort(function(a, b) {
                 if (a[key] < b[key]) {
                     return 1;
                 }
-
                 if (a[key] > b[key]) {
                     return -1;
                 }
-
                 return 0;
             });
         },
-        name: 'yd-table',
+        name: 'ui-table',
         template: template
     });
 

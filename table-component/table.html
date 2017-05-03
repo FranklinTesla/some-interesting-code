@@ -1,14 +1,16 @@
-<table class="m-table {className}">
+<table class="m-table {@(class)}">
     <thead>
         <tr>
             {#list props as prop}
             <th r-style={{width: prop.width}}>
-                {#if prop.choice}
+                {#if prop.headTemplate}
+                    {#include prop.headTemplate}
+                {#elseif prop.choice}
                     <select2
                         placeholder=""
                         class="m-select3-m m-select3"
                         source={prop.choice}
-                        on-select={this.changeSource($event)}/>
+                        on-select={this.changeSource($event, prop.name)}/>
                 {#elseif prop.sortable}
                     <span class="table_sort" r-class={{'ascend': isAscend, 'descend': !isAscend}} on-click={this.toggleSort(prop.name)}>{prop.label}</span>
                 {#else}{prop.label}{/if}</th>
