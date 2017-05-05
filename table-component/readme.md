@@ -2,7 +2,7 @@
 
 html:  
     
-    <yd-table data={tableData} props={tableProps} className="table1" on-refresh={this.tableRefresh($event)}/>
+    <ui-table data={tableData} props={tableProps} class="table1" on-refresh={this.tableRefresh($event)}/>
 
 js:
 
@@ -113,7 +113,7 @@ js:
         
         **注：headTemplate中不可使用$row和$index**
 
-    5. props[i].choice:
+    6. props[i].choice:
 
         [可选]
 
@@ -123,16 +123,41 @@ js:
 
         若传该属性，则props[i].label不会在表头中显示。
 
-    6. props[i].sortable
+    7. props[i].sortable
 
         [可选]
 
         类型：Boolean
 
         是否可点击该列表头排序，第一次点击按该列升序对data进行排序。
-
-2. 事件：
-
-    refresh: 
+        
+    8. props[i].maxWidth
     
+        [可选]
+        
+        类型：String
+        
+        该列的最大宽度
+        
+    9. props[i].minWidth
+    
+        [可选]
+        
+        类型：String
+        
+        该列的最小宽度
+#### 事件
+
+1. refresh: 
+
     如果有表头使用可选择的下拉框，当在下拉框中手动选择选项时触发，回调函数中的$event为当前选择的选项。
+#### 分发内容
+可以这样使用：
+
+    <ui-table data={tableData} props={tableProps} class="table1" on-refresh={this.tableRefresh($event)}>
+        <div>数据为空的自定义内容</div>
+    </ui-table>
+在data为空数组时，会展示`<div>数据为空的自定义内容</div>`,不插入时默认展示“暂无数据”
+
+**注：分发内容仅在data为空数组时有用**
+    

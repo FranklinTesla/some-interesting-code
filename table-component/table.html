@@ -2,7 +2,10 @@
     <thead>
         <tr>
             {#list props as prop}
-            <th r-style={{width: prop.width}}>
+            <th r-style={{
+                'width': prop.width,
+                'min-width': prop.minWidth,
+                'max-width': prop.maxWidth}}>
                 {#if prop.headTemplate}
                     {#include prop.headTemplate}
                 {#elseif prop.choice}
@@ -12,20 +15,26 @@
                         source={prop.choice}
                         on-select={this.changeSource($event, prop.name)}/>
                 {#elseif prop.sortable}
-                    <span class="table_sort" r-class={{'ascend': isAscend, 'descend': !isAscend}} on-click={this.toggleSort(prop.name)}>{prop.label}</span>
+                    <span class="table_sort" r-class={{'ascend': !prop.isReverse, 'descend': prop.isReverse}} on-click={this.toggleSort(prop)}>{prop.label}</span>
                 {#else}{prop.label}{/if}</th>
             {/list}
         </tr>
     </thead>
     <tbody>
-        {#list data as tableItem}
-        <tr>
-            {#list props as prop}
-            <td>
-                {#include prop.template || tableItem[prop.name]}
-            </td>
+        {#if data.length === 0}
+            <tr>
+                <td colspan={props.length}>{#include this.$body || '暂无数据'}</td>
+            </tr>
+        {#else}
+            {#list data as tableItem}
+            <tr>
+                {#list props as prop}
+                <td>
+                    {#include prop.template || tableItem[prop.name]}
+                </td>
+                {/list}
+            </tr>
             {/list}
-        </tr>
-        {/list}
+        {/if}
     </tbody>
 </table>

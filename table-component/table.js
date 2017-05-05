@@ -43,9 +43,6 @@ NEJ.define([
                 }
             }
         },
-        data: {
-            isAscend: true
-        },
         parseCustomTemplate: function(prop) {
             if (typeof prop.template !== 'string') {
                 throw new Error('The type of prop.template must be String!');
@@ -92,13 +89,17 @@ NEJ.define([
                 });
             }
         },
-        toggleSort: function(key) {
-            if (!isReverse) {
-                this.ascending(key);
-            } else {
-                this.descending(key);
+        toggleSort: function(prop) {
+            if (prop.isReverse === undefined) {
+                prop.isReverse = true;
             }
-            isReverse = !isReverse;
+            if (prop.isReverse) {
+                this.ascending(prop.name);
+                prop.isReverse = false;
+            } else {
+                this.descending(prop.name);
+                prop.isReverse = true;
+            }
         },
         _handleServerSort: function(key) {
             this.$emit('refresh', {
@@ -107,7 +108,6 @@ NEJ.define([
             });
         },
         ascending: function(key) {
-            this.data.isAscend = true;
             // 服务端排序
             if (this.data.serverSort) {
                 this._handleServerSort(key);
@@ -125,7 +125,6 @@ NEJ.define([
             });
         },
         descending: function(key) {
-            this.data.isAscend = false;
             // 服务端排序
             if (this.data.serverSort) {
                 this._handleServerSort(key);
