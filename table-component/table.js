@@ -89,28 +89,38 @@ NEJ.define([
                 });
             }
         },
+        resetOtherSortMark: function(prop) {
+            var props = this.data.props;
+            for (var i = 0, len = props.length;i < len;i++) {
+                if (props[i] !== prop) {
+                    delete props[i].isReverse;
+                }
+            }
+        },
         toggleSort: function(prop) {
             if (prop.isReverse === undefined) {
                 prop.isReverse = true;
             }
             if (prop.isReverse) {
-                this.ascending(prop.name);
+                this.ascending(prop);
                 prop.isReverse = false;
             } else {
-                this.descending(prop.name);
+                this.descending(prop);
                 prop.isReverse = true;
             }
+            this.resetOtherSortMark(prop);
         },
-        _handleServerSort: function(key) {
+        _handleServerSort: function(prop) {
             this.$emit('refresh', {
-                key: key,
-                value: {isAscend: this.data.isAscend}
+                key: prop.name,
+                value: {isDescend: prop.isReverse}
             });
         },
-        ascending: function(key) {
+        ascending: function(prop) {
+            var key = prop.name;
             // 服务端排序
             if (this.data.serverSort) {
-                this._handleServerSort(key);
+                this._handleServerSort(prop);
                 return;
             }
             var tableData = this.data.data;
@@ -124,10 +134,11 @@ NEJ.define([
                 return 0;
             });
         },
-        descending: function(key) {
+        descending: function(prop) {
+            var key = prop.name;
             // 服务端排序
             if (this.data.serverSort) {
-                this._handleServerSort(key);
+                this._handleServerSort(prop);
                 return;
             }
             var tableData = this.data.data;

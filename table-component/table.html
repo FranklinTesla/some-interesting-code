@@ -15,7 +15,7 @@
                         source={prop.choice}
                         on-select={this.changeSource($event, prop.name)}/>
                 {#elseif prop.sortable}
-                    <span class="table_sort" r-class={{'ascend': !prop.isReverse, 'descend': prop.isReverse}} on-click={this.toggleSort(prop)}>{prop.label}</span>
+                    <span class="table_sort" r-class={{'ascend': prop.isReverse === false, 'descend': prop.isReverse}} on-click={this.toggleSort(prop)}>{prop.label}</span>
                 {#else}{prop.label}{/if}</th>
             {/list}
         </tr>
