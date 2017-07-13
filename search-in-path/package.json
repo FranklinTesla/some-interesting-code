@@ -1,0 +1,7 @@
+{
+  "name": "searchStringIndir",
+  "version": "0.0.1",
+  "bin": {
+    "search": "searchStringInDir.js"
+  }
+}
