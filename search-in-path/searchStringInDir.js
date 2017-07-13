@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 const fs = require('fs')
-    , args = process.argv.slice(2);
+    , args = process.argv.slice(-2);
 // 转换windows下的路径
 function parseDir(str) {
     return str.replace(/\\/g, '/')
@@ -42,4 +42,4 @@ function isStrExist(str, path) {
     return getFilesWithStr(str, path).length > 0;
 }
 
-console.log(isStrExist(args[0], parseDir(args[1])));
+console.log(isStrExist(args[1], parseDir(args[0])));
