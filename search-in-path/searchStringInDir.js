@@ -1,9 +1,6 @@
 #!/usr/bin/env node
 const fs = require('fs')
     , args = process.argv.slice(2);
-
-let dir = 'E:\\yidun-website\\yidun-website-web\\src\\main\\webapp\\src';
-
 // 转换windows下的路径
 function parseDir(str) {
     return str.replace(/\\/g, '/')
