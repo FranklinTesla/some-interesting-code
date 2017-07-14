@@ -1,9 +1,10 @@
 #!/usr/bin/env node
-const fs = require('fs');
+const fs = require('fs')
+    , path = require('path');
 const args = process.argv.slice(2);
-// 转换windows下的路径
+// 处理windows下的路径，将相对路径转换为绝对路径并去掉文件夹路径末尾的斜杠
 function parseDir(str) {
-    return str.replace(/\\/g, '/')
+    return path.resolve(str.replace(/\\/g, '/').replace(/\/$/, ''));
 }
 
 function regExpEscape(str) {
