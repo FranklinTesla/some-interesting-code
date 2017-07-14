@@ -7,7 +7,7 @@ function parseDir(str) {
 }
 
 function regExpEscape(str) {
-    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+    return str.replace(/[\-\[\]\/{}()*+?.\\^$|]/g, "\\$&");
 }
 
 function getRegExp(suffixStr) {
