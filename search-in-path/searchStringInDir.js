@@ -1,9 +1,17 @@
 #!/usr/bin/env node
-const fs = require('fs')
-    , args = process.argv.slice(-2);
+const fs = require('fs');
+const args = process.argv.slice(2);
 // 转换windows下的路径
 function parseDir(str) {
     return str.replace(/\\/g, '/')
+}
+
+function regExpEscape(str) {
+    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+}
+
+function getRegExp(suffixStr) {
+    return new RegExp(regExpEscape(suffixStr)+'$');
 }
 
 // 判断给定路径是否是文件夹
@@ -17,16 +25,19 @@ function isFileContain(str, file) {
     return fs.readFileSync(file, 'utf-8').indexOf(str) !== -1;
 }
 // 获取含有字符串str的文件路径列表
-function getFilesWithStr(str, path) {
+function getFilesWithStr(str, path, suffix) {
     let result = [];
     function _loop(currentPath, files, dir) {
-        let path, isContain;
+        let path, isContain, isTargetFile = true;
         for (let i = 0, len = files.length;i < len;i++) {
             path = currentPath+'/'+files[i];
             if (isDir(path)) {
                 _loop(path, fs.readdirSync(path), dir);
             } else {
-                isContain = /.js$/.test(path) && isFileContain(dir, path);
+                if (suffix) {
+                    isTargetFile = getRegExp(suffix).test(path);
+                }
+                isContain = isTargetFile && isFileContain(dir, path);
                 if (isContain) {
                     result.push(path);
                 }
@@ -42,4 +53,10 @@ function isStrExist(str, path) {
     return getFilesWithStr(str, path).length > 0;
 }
 
-console.log(isStrExist(args[1], parseDir(args[0])));
+const result = getFilesWithStr(args[2], parseDir(args[0]), args[1]);
+
+if (result.length > 0) {
+    console.log(result.join('\n'));
+} else {
+    console.log('无符合要求的结果');
+}
