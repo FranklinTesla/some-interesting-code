@@ -1,16 +1,6 @@
-function addSeparator(value) {
-    function _addSeparator() {
-        var rule = /(\d+)(\d{3},)/;
-        if (!rule.test(value)) {
-            return;
-        }
-        value = value.replace(rule, '$1,$2');
-        _addSeparator(value);
-    }
-
-    value = value.toString().replace(/(\d+)(\d{3}$)/, '$1,$2');
-
-    _addSeparator(value);
-
-    return value;
+function addSeparator(num) {
+    return num.toString().replace(/(\d{1,2})?((\d{3})+)(?=\.|$)/, (match, $1, $2) => {
+        const temp = $2.replace(/\d{3}/g, ',$&')
+        return $1 ? $1 + temp : temp.replace(/^,/, '')
+    })
 }

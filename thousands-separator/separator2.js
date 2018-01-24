@@ -5,6 +5,6 @@ function addSeparator(value) {
     }
 
     value = _reverseStr(value.toString())
-                .replace(/\d{3}/g, '$&,').replace(/,$/, '');
+                .replace(/(\d+\.)?(\d{3})/g, '$1$2,').replace(/,$/, '');
     return _reverseStr(value);
 }
